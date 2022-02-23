@@ -14,6 +14,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
+usuario_nova_cana = "insert_username"  # INSERT USERNAME HERE
+senha_nova_cana = "insert_password"    # INSERT PASSWORD HERE
+path = r"C:\path"  # INSERT FILE PATH HERE
+
+estado_url_suffix = ["acre","bahia","goias","mato-grosso","minas-gerais","paraiba","rio-de-janeiro","rio-grande-do-sul","sao-paulo","alagoas","amazonas","ceara","espirito-santo","maranhao","mato-grosso-do-sul","para","parana","piaui","rio-grande-do-norte","rondonia","sergipe","tocantins"]
+base_url = "https://www.novacana.com/usinas_brasil/estados/"
+
 def nova_cana_login(url_suffix):
     driver = webdriver.Chrome(ChromeDriverManager().install())
     url = base_url + url_suffix
@@ -119,12 +126,6 @@ def save_xls(dict_dfs, xls_path):
         dict_dfs[key].to_excel(writer, key)
     writer.save()
 
-base_url = "https://www.novacana.com/usinas_brasil/estados/"
-estado_url_suffix = ["acre","bahia","goias","mato-grosso","minas-gerais","paraiba","rio-de-janeiro","rio-grande-do-sul","sao-paulo","alagoas","amazonas","ceara","espirito-santo","maranhao","mato-grosso-do-sul","para","parana","piaui","rio-grande-do-norte","rondonia","sergipe","tocantins"]
-usuario_nova_cana = "insert_username"  # INSERT USERNAME HERE
-senha_nova_cana = "insert_password"    # INSERT PASSWORD HERE
-
-path = r"C:\path"  # INSERT FILE PATH HERE
 dict_usinas = {}
 
 for estado in estado_url_suffix:
