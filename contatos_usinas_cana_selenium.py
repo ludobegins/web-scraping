@@ -126,42 +126,45 @@ def save_xls(dict_dfs, xls_path):
         dict_dfs[key].to_excel(writer, key)
     writer.save()
 
-dict_usinas = {}
+def main():
+    dict_usinas = {}
 
-for estado in estado_url_suffix:
-    lista_dfs_usinas_estado = []
-    driver = nova_cana_login(estado)
-    sleep(5)
-    usinas_lista = lista_usinas(driver)
-    cidades_lista = lista_cidades(driver)
-    contatos_lista = add_blank_contacts(lista_contatos(driver))
-    (sites,emails,telefones) = split_contacts(contatos_lista)
-    (cidades_lista,sites,emails,telefones) = clean_cols(cidades_lista,sites,emails,telefones)
-    lista_dfs_usinas_estado.append(lists_to_df(usinas_lista,cidades_lista,sites,emails,telefones))
+    for estado in estado_url_suffix:
+        lista_dfs_usinas_estado = []
+        driver = nova_cana_login(estado)
+        sleep(5)
+        usinas_lista = lista_usinas(driver)
+        cidades_lista = lista_cidades(driver)
+        contatos_lista = add_blank_contacts(lista_contatos(driver))
+        (sites,emails,telefones) = split_contacts(contatos_lista)
+        (cidades_lista,sites,emails,telefones) = clean_cols(cidades_lista,sites,emails,telefones)
+        lista_dfs_usinas_estado.append(lists_to_df(usinas_lista,cidades_lista,sites,emails,telefones))
 
-    if estado == "sao-paulo":
-        lim_pag = 10
-    else:
-        lim_pag = 4
+        if estado == "sao-paulo":
+            lim_pag = 10
+        else:
+            lim_pag = 4
 
-    for i in range(2,lim_pag):
-        try:
-            driver.get(base_url+estado+f"?page={i}")
-            #driver = nova_cana_login(estado+f"?page={i}")
-            sleep(5)
-            usinas_lista = lista_usinas(driver)
-            cidades_lista = lista_cidades(driver)
-            contatos_lista = add_blank_contacts(lista_contatos(driver))
-            (sites,emails,telefones) = split_contacts(contatos_lista)
-            (cidades_lista,sites,emails,telefones) = clean_cols(cidades_lista,sites,emails,telefones)
-            lista_dfs_usinas_estado.append(lists_to_df(usinas_lista,cidades_lista,sites,emails,telefones))
-        except:
-            pass
-    
-    df_usinas_estado = pd.concat(lista_dfs_usinas_estado)
-    dict_usinas[estado] = df_usinas_estado
-    #print(df_usinas_estado)
-    save_xls(dict_usinas,path)
+        for i in range(2,lim_pag):
+            try:
+                driver.get(base_url+estado+f"?page={i}")
+                #driver = nova_cana_login(estado+f"?page={i}")
+                sleep(5)
+                usinas_lista = lista_usinas(driver)
+                cidades_lista = lista_cidades(driver)
+                contatos_lista = add_blank_contacts(lista_contatos(driver))
+                (sites,emails,telefones) = split_contacts(contatos_lista)
+                (cidades_lista,sites,emails,telefones) = clean_cols(cidades_lista,sites,emails,telefones)
+                lista_dfs_usinas_estado.append(lists_to_df(usinas_lista,cidades_lista,sites,emails,telefones))
+            except:
+                pass
+        
+        df_usinas_estado = pd.concat(lista_dfs_usinas_estado)
+        dict_usinas[estado] = df_usinas_estado
+        #print(df_usinas_estado)
+        save_xls(dict_usinas,path)
 
-sleep(3)
-driver.close()
+    driver.close()
+
+if __name__ == "__main__":
+    main()
